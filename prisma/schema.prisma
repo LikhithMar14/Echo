@@ -1,0 +1,188 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model User {
+  id       String    @id @default(cuid())
+  name     String?
+  username String?   @unique
+  email    String?   @unique
+  bio      String?
+  password String?
+  image    String?
+  location String?
+  accounts Account[]
+
+  posts    Post[]
+  comments Comment[]
+  likes    Like[]
+
+  followers Follows[]   @relation("The People who are following this Particular User") //Bhai Tuje kon Log follow kar rahhe hain
+  following Follows[] @relation("The People who are being followed by this User") //Bhai Tu kin Logon follow kar rahe ho
+
+  //Same like following thing
+
+  notifications         Notification[] @relation("userNotifications") // Bhai ka notifications
+  notificaionsTriggered Notification[] @relation("notificationCreator") // Bhai ki vajah se Dusron ko notification aaya hain
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+
+
+model Post {
+  id String @id @default(cuid())
+  authorId  String
+  author  User  @relation(fields: [authorId],references: [id], onDelete: Cascade)
+  content String?
+  image   String?
+
+  comments  Comment[]
+  likes     Like[]
+  notifications Notification[]
+
+
+  createdAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+}
+
+
+enum CommentType{
+  COMMENT
+  POST
+}
+
+model Comment{
+  id String @id @default(cuid())
+  content String
+  type CommentType
+  authorId String
+  author User @relation(fields: [authorId],references: [id],onDelete: Cascade)
+
+  // Here we are implement chainded Comments also 
+  /*
+    Comment can be for a Post or for a comment
+    
+  */
+
+  postId  String?
+  post Post?  @relation(fields: [postId],references: [id],onDelete: Cascade)
+  
+  parentId  String?   
+  parent    Comment?   @relation("Replies",fields: [parentId],references: [id],onDelete: Cascade)
+  children  Comment[]   @relation("Replies")
+
+  likes     Like[]
+
+  notifications Notification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([authorId,postId,parentId])
+
+}
+enum LikeType{
+  POST
+  COMMENT
+}
+model Like{
+  id String @id @default(cuid())
+  postId  String?
+  commentId String?
+  type  LikeType
+
+  userId  String
+  user  User @relation(fields: [userId],references: [id],onDelete: Cascade)
+
+  post Post? @relation(fields: [postId],references: [id],onDelete: Cascade)
+  comment Comment? @relation(fields: [commentId],references: [id],onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+  
+
+  @@index([userId,postId])
+  @@index([userId,commentId])
+
+
+}
+
+model Follows{
+  followerId  String
+  followingId String
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+
+
+  follower  User @relation("The People who are following this Particular User",fields: [followerId],references: [id], onDelete: Cascade)
+  following User @relation("The People who are being followed by this User",fields: [followingId],references: [id],onDelete: Cascade)
+
+
+  @@index([followerId,followingId])
+  @@id([followerId,followingId]) //amalgamation of the follower and following id
+
+}
+
+enum NotificationType{
+  LIKE
+  POST
+  COMMENT
+}
+
+model Notification{
+  id String @id @default(cuid())
+  userId String
+  triggererId String
+  type NotificationType
+  read Boolean @default(false)
+  postId  String?
+  commentId String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user      User     @relation("userNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  triggerer   User     @relation("notificationCreator", fields: [triggererId], references: [id], onDelete: Cascade)
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])//becuase at a time we only fetch some at a timne we need to show latest five like that
+
+}
