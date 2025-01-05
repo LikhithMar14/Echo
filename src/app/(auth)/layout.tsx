@@ -11,7 +11,7 @@ export default function AuthLayout({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-screen ">
         {/* Left Section */}
         {/* Left Section */}
-        <div className="hidden md:flex col-span-2 items-center my-auto min-h-[600px] justify-center brounded-lg shadow-sm  p-8">
+        <div className="hidden md:flex col-span-2 items-center my-auto min-h-[600px] justify-center brounded-lg shadow-sm  p-8 ">
           <div className="flex flex-col items-center text-center gap-10 ">
             <H1 className="text-3xl bg-gradient-to-b from-blue-400 to-blue-700 bg-clip-text font-black tracking-tighter text-transparent">
               "Echo: Where Your Voice Finds Its Amplification."

@@ -18,14 +18,18 @@ export default auth(async (req) => {
   const isPrivateRoutes = privateRoutes.includes(nextUrl.pathname);
   const isAuthRoute = nextUrl.pathname.includes("/login") || nextUrl.pathname.includes("/register");
   const isApiRoute = nextUrl.pathname.includes("/api");
+  const slug  =(nextUrl.pathname.split('/'))
+  const val = slug[1]
 
-  console.log(nextUrl.pathname)
+  console.log(val)
   if(nextUrl.pathname.includes("/api/auth/signin")){
     console.log("I BLOCKED BROOOO")
     console.log("I BLOCKED BROOOO")
     return Response.redirect(`${url}/login`)
   }
-
+  if((nextUrl.pathname.includes('profile') || nextUrl.pathname.includes('posts')) && !isLoggedIn){
+    return Response.redirect(`${url}/login`)
+  }
   if(isApiRoute){
     return;
   }
@@ -45,6 +49,7 @@ export default auth(async (req) => {
 
 export const config = {
     matcher: [
+
       // Skip Next.js internals and all static files, unless found in search params
       '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
       // Always run for API routes
