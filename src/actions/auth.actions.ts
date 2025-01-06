@@ -54,7 +54,6 @@ export const register = async (data: RegistrationType) => {
     return { success: "User Registered Successfully" };
   } catch (error) {
 
-    console.error("Database error:", error);
 
   }
 };
@@ -72,7 +71,7 @@ export const login = async (data:LoginType) => {
       username
     }
   })
-  console.log(userExists)
+
 
   if(!userExists){
     return { error: "Invalid username or password"}
@@ -84,7 +83,7 @@ export const login = async (data:LoginType) => {
     const response = await signIn("credentials", {
       username,
       password,
-      redirectTo: '/',
+      redirectTo: '/home',
     });
     return {success:"Login Successful"}
   } catch (error) {

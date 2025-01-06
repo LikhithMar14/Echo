@@ -1,12 +1,19 @@
 "use server"
 
-import { signIn } from "@/auth"
+import { auth, signIn } from "@/auth"
 import { AuthError } from "next-auth"
 
 
 export async function googleAuthenticate(){
     try{
-        await signIn('google')
+
+
+        const session = await auth();
+
+
+        const response = await signIn('google')
+
+
     }catch(err){
         if(err instanceof AuthError)return 'google logIn failed'
         

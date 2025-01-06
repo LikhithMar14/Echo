@@ -40,7 +40,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data: LoginType) => {
-    console.log("Submission Triggered");
+
     setError("");
     setSuccess("");
     setLoading(true);
