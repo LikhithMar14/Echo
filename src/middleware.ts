@@ -3,11 +3,10 @@ import authConfig from "./auth.config";
 import NextAuth from "next-auth";
 import { privateRoutes } from "./route";
 
-// Use only one of the two middleware options below
+
 const { auth } = NextAuth(authConfig);
 
 export default auth(async (req) => {
-
 
 
 
@@ -29,7 +28,7 @@ export default auth(async (req) => {
   }
 
   if (isApiRoute) {
-    return NextResponse.next(); // Allow API route to continue
+    return NextResponse.next();
   }
 
   if (isLoggedIn && isAuthRoute) {
@@ -37,14 +36,14 @@ export default auth(async (req) => {
   }
 
   if (isAuthRoute && !isLoggedIn) {
-    return NextResponse.next(); // Allow unauthenticated access to auth routes
+    return NextResponse.next(); 
   }
 
   if (!isLoggedIn && isPrivateRoutes) {
     return NextResponse.redirect(`${nextUrl.origin}/login`);
   }
 
-  return NextResponse.next(); // Continue for other routes
+  return NextResponse.next();
 });
 
 export const config = {
