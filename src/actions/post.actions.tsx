@@ -2,6 +2,7 @@
 import { CreatePostSchema, CreatePostType } from "@/schemas/post";
 import db from "@/db";
 import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 
 export const createPostAction = async (formData: FormData) => {
@@ -9,7 +10,6 @@ export const createPostAction = async (formData: FormData) => {
 
   const userId = session?.user.id as string;
   console.log("In side Create post action");
-  console.log("Form Data", formData);
   const values = Object.fromEntries(formData.entries());
 
   try {
@@ -21,9 +21,13 @@ export const createPostAction = async (formData: FormData) => {
         image: postImage,
       },
     });
+
+    console.log("Post Created Successfully")
   } catch (err) {
     console.error("Invalid Inputs", err);
   }
+
+  revalidatePath('/home')
 };
 export const showPosts = async () => {
     const response = await db.post.findMany({
@@ -35,8 +39,10 @@ export const showPosts = async () => {
         comments: true,
         author: {
           select: {
-            image: true, 
-            name: true, 
+            image: true,
+            name: true,
+            username: true,
+            email: true,
           },
         },
       },
@@ -45,6 +51,13 @@ export const showPosts = async () => {
       },
     });
   
-    return response;
+    const updatedResponse = response.map(post => {
+      if (!post.author.username && post.author.email) {
+        post.author.username = post.author.email.split('@')[0];
+      }
+      return post;
+    });
+  
+    return updatedResponse;
   };
   
