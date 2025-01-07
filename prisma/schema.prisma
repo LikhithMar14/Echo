@@ -45,6 +45,7 @@ model User {
   image    String?
   location String?
   accounts Account[]
+  isOauth  Boolean?
 
   posts    Post[]
   comments Comment[]

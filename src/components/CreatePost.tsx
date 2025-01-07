@@ -1,16 +1,18 @@
 "use client";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { ImageIcon } from "lucide-react";
-import { UploadButton , UploadDropzone} from "@/utils/uploadthing";
+import { UploadDropzone } from "@/utils/uploadthing";
 import { useState } from "react";
+import { createPostAction } from "@/actions/post.actions";
+import Form from "next/form";
 
 interface CreatePostProps {
-  profilePic?: string | undefined | null;
+  profilePic?: string;
 }
 
 const CreatePost = ({ profilePic }: CreatePostProps) => {
-  const [imageUrl,setImageUrl] = useState<string>()
+  const [imageUrl, setImageUrl] = useState<string>();
+
   return (
     <div className="flex flex-col p-4 bg-opacity-0 rounded-lg space-y-4">
       {/* Top Section: Profile and Input Prompt */}
@@ -29,28 +31,42 @@ const CreatePost = ({ profilePic }: CreatePostProps) => {
       </div>
 
       {/* Input Section */}
-      <div>
-        <textarea
-          className="bg-transparent text-white h-[60px] w-full p-4 rounded-lg resize-none outline-none placeholder-gray-500"
-          placeholder="Write your thoughts here..."
-        ></textarea>
-      </div>
-      <UploadDropzone className=" rounded-full border-[1px] border-sky-600 ut-button:bg-blue-700" 
-        endpoint="imageUploader"
-        onClientUploadComplete={(res) => {
-          console.log("Files: ", res);
-          setImageUrl(() => res[1]?.appUrl as string)
-          alert("Upload Completed");
-        }}
-        onUploadError={(error: Error) => {
-          alert(`ERROR! ${error.message}`);
-        }}
-      />
+      <Form action={createPostAction}>
+        <div>
+          <textarea
+            name="postMatter"
+            defaultValue={""}
+            className="bg-transparent text-white h-[60px] w-full p-4 rounded-lg resize-none outline-none placeholder-gray-500"
+            placeholder="Write your thoughts here..."
+          ></textarea>
+        </div>
+        <UploadDropzone 
+          className=" rounded-full border-[1px] border-sky-600 ut-button:bg-blue-700"
+          endpoint="imageUploader"
+          onClientUploadComplete={(res) => {
+            setImageUrl(res[0].url);
 
-      {/* Footer */}
-      <div className="flex justify-end items-center">
-        <Button variant={"default"}>Post</Button>
-      </div>
+            alert("Upload Completed");
+          }}
+          onUploadError={(error: Error) => {
+            alert(`ERROR! ${error.message}`);
+          }}
+        />
+
+        <input
+          name="postImage"
+          type="hidden"
+          value={imageUrl || "/ProfilePic.jpg"}
+        />
+
+        {/* Footer */}
+
+        <div className="flex justify-end items-center mt-3">
+          <Button variant={"default"} type="submit">
+            Post
+          </Button>
+        </div>
+      </Form>
     </div>
   );
 };

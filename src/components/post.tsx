@@ -45,6 +45,7 @@ const PostComponent = ({ props }: PostProps) => {
             height={300}
             style={{ objectFit: "cover" }}
             className="p-2 pb-4 rounded-xl"
+            priority = {true}
           />
         </div>
       </div>

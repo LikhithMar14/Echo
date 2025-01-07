@@ -34,7 +34,7 @@ export const { auth, handlers:{GET,POST}, signIn, signOut } = NextAuth({
             token.username = existingUser.username 
             ? existingUser.username 
             : existingUser?.email?.split('@')[0];
-            console.log("Token: ", token)
+
             return token
         },
         async session({token,session}){

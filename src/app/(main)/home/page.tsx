@@ -7,10 +7,10 @@ import { followersById, followingById } from "@/data/user";
 
 const HomePage = async () => {
   const session = await auth();
-  console.log("SESSION DATA:", session);
+
 
   if (!session?.user) return null;
-  const { name , image, id, location, username , webiste} = session.user;
+  let { name, image, id, location, username, webiste } = session.user;
 
   const followingData = await followingById(id);
 
@@ -20,6 +20,8 @@ const HomePage = async () => {
 
   const followersCount = followersData.followersCount;
 
+  image = image || "/ProfilePic.jpg";
+  name = name || "guest";
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-11  mx-auto px-5 gap-x-5 mt-12">
@@ -30,9 +32,9 @@ const HomePage = async () => {
         following={followingCount}
         followers={followersCount}
         location={location}
-        website = {webiste}
+        website={webiste}
       />
-      <Mainbar ProfilePic={image}/>
+      <Mainbar ProfilePic={image} />
       <SuggestedUsers />
     </div>
   );

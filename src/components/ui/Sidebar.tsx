@@ -11,7 +11,7 @@ import Link from "next/link";
 
 
 interface SidebarProps {
-  name: string | null | undefined;
+  name: string ;
   username: string;
   profilePic?: string | null;
   following?: number;

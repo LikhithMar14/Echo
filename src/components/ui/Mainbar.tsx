@@ -3,7 +3,7 @@ import CreatePost from "../CreatePost";
 import PostComponent from "../post";
 
 interface MainbarProps{
-  ProfilePic ?:string | undefined | null
+  ProfilePic ?:string 
 }
 
 const Mainbar = ({ProfilePic}:MainbarProps) => {
