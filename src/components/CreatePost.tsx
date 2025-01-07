@@ -23,8 +23,12 @@ const CreatePost = () => {
       </div>
 
       {/* Footer */}
-      <div className="flex justify-between items-center ">
-        <Image />
+      <div className="flex justify-between items-center">
+        <div className="flex gap-x-2">
+            <Image className=""/>
+            <div className="text-muted-foreground">Image</div>
+        </div>
+       
         <Button variant={"default"}>Post</Button>
       </div>
     </div>

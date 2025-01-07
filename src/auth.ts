@@ -1,7 +1,6 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import db from "@/db"
-import Google from "next-auth/providers/google"
 import authConfig from "./auth.config"
 import { getUserById } from "./data/user"
 import { getAccountByUserId } from "./data/account"
@@ -31,11 +30,11 @@ export const { auth, handlers:{GET,POST}, signIn, signOut } = NextAuth({
             token.name = existingUser.name;
             token.email = existingUser.email;
             token.image = existingUser.image;
-            
-
-
-
-
+            token.location = existingUser.location || "Mars",
+            token.username = existingUser.username 
+            ? existingUser.username 
+            : existingUser?.email?.split('@')[0];
+            console.log("Token: ", token)
             return token
         },
         async session({token,session}){
@@ -45,7 +44,10 @@ export const { auth, handlers:{GET,POST}, signIn, signOut } = NextAuth({
                 user:{
                     ...session.user,
                     id:token.sub,
-                    isOauth: token.isOauth
+                    isOauth: token.isOauth,
+                    location:token.location,
+                    username:token.username
+                
                 }
             }
         }

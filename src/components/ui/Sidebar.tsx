@@ -1,35 +1,37 @@
-import { SidebarAction } from "@/actions/user.action";
+
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+
 } from "@/components/ui/card";
-import { LocateIcon, MapPinCheckIcon, MapPinIcon, PinIcon } from "lucide-react";
+import { MapPinIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+
 interface SidebarProps {
-  name?: string;
-  username?: string;
-  profilePic?: string;
+  name: string | null | undefined;
+  username: string;
+  profilePic?: string | null;
   following?: number;
   followers?: number;
   location?: string;
-  website?: string;
+  website: string;
 }
 
 const Sidebar = ({
-  name = "Guest",
-  username = "@guest",
+  name,
+  username,
   profilePic = "/ProfilePic.jpg",
-  followers = 0,
-  following = 0,
+  followers,
+  following,
   location = "Mars",
   website = "https://RehneDe-Bhai.com",
 }: SidebarProps) => {
+
+  console.log("Website:",website)
+
   return (
     <div className="hidden md:block w-full h-fit sticky top-20 pt-5 col-span-3">
       <div className="w-full">
