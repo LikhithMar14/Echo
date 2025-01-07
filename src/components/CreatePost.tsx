@@ -1,15 +1,29 @@
-import { Image } from "lucide-react";
-import { Input } from "./ui/input";
+"use client";
+import Image from "next/image";
 import { Button } from "./ui/button";
+import { ImageIcon } from "lucide-react";
+import { UploadButton , UploadDropzone} from "@/utils/uploadthing";
+import { useState } from "react";
 
-const CreatePost = () => {
+interface CreatePostProps {
+  profilePic?: string | undefined | null;
+}
+
+const CreatePost = ({ profilePic }: CreatePostProps) => {
+  const [imageUrl,setImageUrl] = useState<string>()
   return (
     <div className="flex flex-col p-4 bg-opacity-0 rounded-lg space-y-4">
       {/* Top Section: Profile and Input Prompt */}
       <div className="flex gap-x-4 items-center">
         <div className="w-12 h-12 bg-gray-600 rounded-full flex-shrink-0">
           {/* Profile Image Placeholder */}
-          <span className="text-white flex items-center justify-center h-full">C</span>
+          <Image
+            src={profilePic || "/ProfilePic.jpg"}
+            alt="Your Profile Image"
+            height={50}
+            width={50}
+            className="rounded-full"
+          />
         </div>
         <div className="text-gray-400 text-lg">What's on your mind?</div>
       </div>
@@ -21,14 +35,20 @@ const CreatePost = () => {
           placeholder="Write your thoughts here..."
         ></textarea>
       </div>
+      <UploadDropzone className=" rounded-full border-[1px] border-sky-600 ut-button:bg-blue-700" 
+        endpoint="imageUploader"
+        onClientUploadComplete={(res) => {
+          console.log("Files: ", res);
+          setImageUrl(() => res[1]?.appUrl as string)
+          alert("Upload Completed");
+        }}
+        onUploadError={(error: Error) => {
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
 
       {/* Footer */}
-      <div className="flex justify-between items-center">
-        <div className="flex gap-x-2">
-            <Image className=""/>
-            <div className="text-muted-foreground">Image</div>
-        </div>
-       
+      <div className="flex justify-end items-center">
         <Button variant={"default"}>Post</Button>
       </div>
     </div>

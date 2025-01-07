@@ -32,7 +32,7 @@ const HomePage = async () => {
         location={location}
         website = {webiste}
       />
-      <Mainbar />
+      <Mainbar ProfilePic={image}/>
       <SuggestedUsers />
     </div>
   );
