@@ -2,15 +2,18 @@
 import { showPosts } from "@/actions/post.actions";
 import CreatePost from "../CreatePost";
 import PostComponent from "../post";
+import { likeStatus } from "@/actions/post.actions";
+import { auth } from "@/auth";
 
 interface MainbarProps{
   ProfilePic ?:string 
 }
 
 const Mainbar = async({ProfilePic}:MainbarProps) => {
-
+  const session  = await auth()
   const posts = await showPosts();
-  console.log(posts)
+  // console.log(posts)
+  console.log(posts[0])
   console.log("In Main bar")
 
   
@@ -21,7 +24,7 @@ const Mainbar = async({ProfilePic}:MainbarProps) => {
       {
         posts.map((post,index)=>(
           //@ts-ignore
-          <PostComponent comments={post?.comments as  any} senderImage={post?.author?.image as string} senderName= {post?.author?.name as string} key={index} likes={post?.likes} senderPostImage={post?.image} senderUserName={post?.author?.username} messageContent={post?.content}/>
+          <PostComponent comments={post?.comments as  any} senderImage={post?.author?.image as string} senderName= {post?.author?.name as string} key={index} likes={post?.likes} senderPostImage={post?.image} senderUserName={post?.author?.username || session?.user.username} messageContent={post?.content} postId={post?.id} isLiked = {post?.likeStatus}/>
 
         ))
       }

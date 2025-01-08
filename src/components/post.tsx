@@ -1,7 +1,7 @@
-import { HeartIcon } from "lucide-react";
 import Image from "next/image";
 
-import { FaRegComment } from "react-icons/fa";
+import ReactionBar from "./ReactionBar";
+import { likeStatus } from "@/actions/post.actions";
 
 interface PostProps {
 
@@ -9,14 +9,20 @@ interface PostProps {
     senderName?: string;
     senderUserName?: string;
     senderPostImage?: string;
-    likes?: number;
+    likes?: string[];
     comments?: string[];
-    messageContent?:string
+    messageContent?:string,
+    postId:string,
+    isLiked:boolean
   
 }
 
-const PostComponent = ({ comments,likes,senderImage,senderName,senderPostImage,senderUserName,messageContent}: PostProps) => {
-  console.log(messageContent)
+const PostComponent = async({ comments,likes,senderImage,senderName,senderPostImage,senderUserName,messageContent,postId}: PostProps) => {
+
+  const isLiked = await likeStatus(postId)
+  let liked = false;
+  if(isLiked)liked = true;
+
   return (
     <div className="flex flex-col space-y-2 items-center0 min-h-[370px] justify-around border  rounded-lg p-5  ">
       <div className="post-user w-full h-full">
@@ -25,7 +31,7 @@ const PostComponent = ({ comments,likes,senderImage,senderName,senderPostImage,s
             <Image
               src={senderImage || "/ProfilePic.jpg"}
               width={40}
-              height={40}
+              height={40} 
               className="rounded-full"
               alt="sender image"
             />
@@ -54,25 +60,10 @@ const PostComponent = ({ comments,likes,senderImage,senderName,senderPostImage,s
             priority = {true}
           />
         </div>
+        <ReactionBar isLiked = {liked} commentCount={comments?.length} likeCount={likes?.length} postId = {postId}/>
       </div>
-      <div className="post-reactions w-full flex items-center  justify-around ">
+      
 
-        <div className="flex gap-x-2"><HeartIcon size={20} className="text-red-500" /><div className="text-sm">{likes}</div></div>
-        <div  className="flex gap-x-2"> <FaRegComment size={20} className="text-blue-600" /><div className="text-sm">{comments?.length}</div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-
-       
-      </div>
     </div>
   );
 };

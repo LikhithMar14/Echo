@@ -51,13 +51,13 @@ model User {
   comments Comment[]
   likes    Like[]
 
-  followers Follows[]   @relation("The People who are following this Particular User") //Bhai Tuje kon Log follow kar rahhe hain
-  following Follows[] @relation("The People who are being followed by this User") //Bhai Tu kin Logon follow kar rahe ho
+  followers Follows[]   @relation("The People who are following this Particular User")
+  following Follows[] @relation("The People who are being followed by this User") 
 
   //Same like following thing
 
-  notifications         Notification[] @relation("userNotifications") // Bhai ka notifications
-  notificaionsTriggered Notification[] @relation("notificationCreator") // Bhai ki vajah se Dusron ko notification aaya hain
+  notifications         Notification[] @relation("userNotifications")
+  notificaionsTriggered Notification[] @relation("notificationCreator") 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -99,7 +99,7 @@ model Comment{
 
   // Here we are implement chainded Comments also 
   /*
-    Comment can be for a Post or for a comment
+    Comment can be for a Post or for a comment+
     
   */
 
@@ -141,7 +141,9 @@ model Like{
   
 
   @@index([userId,postId])
+  @@unique([userId,postId])
   @@index([userId,commentId])
+  @@unique([userId,commentId])
 
 
 }

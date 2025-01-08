@@ -35,7 +35,6 @@ export const register = async (data: RegistrationType) => {
       },
     });
 
-    // If the user exists, return an error
     if (userExists) {
       return { error: "Email already is in use. Please try another one." };
     }
@@ -43,7 +42,9 @@ export const register = async (data: RegistrationType) => {
     const lowerCaseEmail = email.toLowerCase();
     const hashedPassword = await  bcrypt.hash(password,10)
 
+
     const user = await db.user.create({
+
       data: {
         email: lowerCaseEmail,
         username,

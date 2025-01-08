@@ -6,6 +6,7 @@ import { LoginSchema } from "./schemas/auth";
 import db from "@/db";
 import bcrypt from "bcryptjs";
 
+
 export default {
   providers: [
     Google({
@@ -31,9 +32,14 @@ export default {
             password,
             existingUser.password
           );
-
+          
           if (PasswordMatch) {
-            return existingUser;
+            return {
+              ...existingUser,
+              username: existingUser.username || existingUser.email?.split('@')[0], 
+              location: existingUser.location || "Mars", 
+              isOauth: existingUser.isOauth || false,
+            };
           }
         }
         return null;
