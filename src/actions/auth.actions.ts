@@ -48,6 +48,7 @@ export const register = async (data: RegistrationType) => {
       data: {
         email: lowerCaseEmail,
         username,
+        name:username,
         password:hashedPassword
       },
     });

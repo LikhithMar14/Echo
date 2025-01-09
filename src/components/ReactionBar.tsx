@@ -5,7 +5,6 @@ import { HeartIcon } from "lucide-react";
 import { useState } from "react";
 import { FaRegComment } from "react-icons/fa";
 import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import Image from "next/image";
@@ -38,6 +37,7 @@ const ReactionBar = ({
   const [likeNo, setLikeCount] = useState<number>(likeCount as number);
   const [commentDialogue, setCommnetDialogue] = useState<boolean>(false);
   const [commentContent, setCommentContent] = useState<string>("");
+  const [showAllComments, setShowAllComments] = useState<boolean>(false); // State to toggle comments visibility
 
   const CommentComponent = ({
     authorImage,
@@ -48,7 +48,7 @@ const ReactionBar = ({
     authorUsername?: string;
     commentContent?: string;
   }) => (
-    <Card className=" border rounded-lg shadow-md">
+    <Card className="border rounded-lg shadow-md mb-2">
       <CardHeader>
         <div className="flex items-center space-x-3">
           <Image
@@ -58,13 +58,12 @@ const ReactionBar = ({
             width={30}
             className="rounded-full"
           />
-
           <div className="text-sm font-semibold text-muted-foreground">
             {"@" + authorUsername}
           </div>
         </div>
       </CardHeader>
-      <CardContent className=" text-white">
+      <CardContent className="text-white">
         <p className="text-sm font-sans">{commentContent}</p>
       </CardContent>
     </Card>
@@ -88,6 +87,10 @@ const ReactionBar = ({
     await likeUnlikePost(postId as string);
     setLike((value) => !value);
     setLikeCount((value) => (like ? value - 1 : value + 1));
+  };
+
+  const toggleCommentsVisibility = () => {
+    setShowAllComments((prevState) => !prevState); 
   };
 
   return (
@@ -120,26 +123,32 @@ const ReactionBar = ({
             </Button>
           </div>
           <hr />
-          <Dialog>
-            <DialogTrigger className="text-center text-sky-400">
-              Show all comments
-            </DialogTrigger>
-            <DialogContent>
-              <DialogTitle>Comments</DialogTitle>
-              {comments.length > 0 ? (
-                comments.map((comment) => (
-                  <CommentComponent
-                    key={comment.id}
-                    authorImage={comment.author.image}
-                    authorUsername={comment.author.username}
-                    commentContent={comment.content}
-                  />
-                ))
-              ) : (
-                <p>No comments yet. Be the first to comment!</p>
-              )}
-            </DialogContent>
-          </Dialog>
+
+          <div>
+            <div
+              className="text-center text-sky-400 cursor-pointer"
+              onClick={toggleCommentsVisibility} 
+            >
+              {showAllComments ? "Hide all comments" : "Show all comments"}
+            </div>
+            {showAllComments && (
+              <div>
+                <div className="flex mb-3 font-sans text-lg">Comments</div>
+                {comments.length > 0 ? (
+                  comments.map((comment) => (
+                    <CommentComponent
+                      key={comment.id}
+                      authorImage={comment.author.image || "/ProfilePic.jpg"}
+                      authorUsername={comment.author.username}
+                      commentContent={comment.content}
+                    />
+                  ))
+                ) : (
+                  <p>No comments yet. Be the first to comment!</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -65,7 +65,8 @@ const PostComponent = async({likes,senderImage,senderName,senderPostImage,sender
             priority = {true}
           />
         </div>
-        <ReactionBar isLiked = {liked} commentCount={comments?.length} likeCount={likes?.length} postId = {postId} comments={comments}/>
+
+        <ReactionBar isLiked = {liked} commentCount={comments?.length} likeCount={likes?.length} postId = {postId} comments={comments as any}/>
       </div>
       
 

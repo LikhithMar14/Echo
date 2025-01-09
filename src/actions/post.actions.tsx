@@ -75,7 +75,11 @@ export const showPosts = async () => {
           comments: true,
         },
       },
+    
     },
+    orderBy:{
+      createdAt : "desc"
+    }
   });
 
 
