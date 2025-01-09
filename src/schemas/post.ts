@@ -6,3 +6,10 @@ export const CreatePostSchema = z.object({
 })
 
 export type CreatePostType = z.infer<typeof CreatePostSchema>
+
+
+export const createCommentSchema = z.object({
+    content:z.string().min (1,"Comment Cannot be empty").max(50,"Comment cannot be more than 50 characters")
+})
+
+export type createCommentType = z.infer<typeof createCommentSchema>

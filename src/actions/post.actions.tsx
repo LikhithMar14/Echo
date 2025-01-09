@@ -1,5 +1,5 @@
 "use server";
-import { CreatePostSchema, CreatePostType } from "@/schemas/post";
+import { createCommentSchema, CreatePostSchema, CreatePostType } from "@/schemas/post";
 import db from "@/db";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
@@ -131,4 +131,42 @@ export const likeStatus = async (postId: string) => {
   });
 
   return like;
+};
+
+export const addComment = async(commentContent:string,postId:string) => {
+  const session = await auth();
+  const userId = session?.user.id as string;
+
+  const comment = await db.comment.create({
+    data:{
+      content:commentContent,
+      authorId:userId as string,
+      postId:postId,
+      type:"POST"
+    }
+  })
+  console.log("Comment added successfully")
+  revalidatePath('/comments')
+}
+
+export const getComments = async(postId:string) => {
+
+
+  const comments = await db.comment.findMany({
+    where:{
+      postId:postId
+    },
+    include:{
+      author:{
+        select:{
+          username:true,
+          image:true,
+          name:true,
+          id:true
+        }
+      }
+    }
+  })
+
+  return comments
 };

@@ -1,7 +1,10 @@
 import Image from "next/image";
 
 import ReactionBar from "./ReactionBar";
-import { likeStatus } from "@/actions/post.actions";
+import { getComments, likeStatus } from "@/actions/post.actions";
+
+
+
 
 interface PostProps {
 
@@ -17,11 +20,12 @@ interface PostProps {
   
 }
 
-const PostComponent = async({ comments,likes,senderImage,senderName,senderPostImage,senderUserName,messageContent,postId}: PostProps) => {
+const PostComponent = async({likes,senderImage,senderName,senderPostImage,senderUserName,messageContent,postId}: PostProps) => {
 
   const isLiked = await likeStatus(postId)
   let liked = false;
   if(isLiked)liked = true;
+  const comments = await getComments(postId);
 
   return (
     <div className="flex flex-col space-y-2 items-center0 min-h-[370px] justify-around border  rounded-lg p-5  ">
@@ -35,6 +39,7 @@ const PostComponent = async({ comments,likes,senderImage,senderName,senderPostIm
               className="rounded-full"
               alt="sender image"
             />
+            
           </div>
           <div className="text-md font-bold font-sans">
             {senderName || "Sender Name"}
@@ -60,7 +65,7 @@ const PostComponent = async({ comments,likes,senderImage,senderName,senderPostIm
             priority = {true}
           />
         </div>
-        <ReactionBar isLiked = {liked} commentCount={comments?.length} likeCount={likes?.length} postId = {postId}/>
+        <ReactionBar isLiked = {liked} commentCount={comments?.length} likeCount={likes?.length} postId = {postId} comments={comments}/>
       </div>
       
 
