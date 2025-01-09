@@ -1,24 +1,26 @@
+"use server"
 import Mainbar from "@/components/ui/Mainbar";
 import { auth } from "@/auth";
 
 import Sidebar from "@/components/ui/Sidebar";
 import SuggestedUsers from "@/components/ui/Suggested";
-import { followersById, followingById } from "@/data/user";
+import {currentUserFollowersCount, currentUserFollowingCount} from "@/actions/user.action"
 
 const HomePage = async () => {
   const session = await auth();
 
 
+
   if (!session?.user) return null;
   let { name, image, id, location, username, webiste } = session.user;
 
-  const followingData = await followingById(id);
+  const followers = await currentUserFollowersCount();
+  const following = await currentUserFollowingCount()
+  console.log("Username of the user: ",session.user.username)
+  // console.log("Followers Count: ",followers)
+  // console.log("Following Count:",following)
 
-  const followingCount = followingData.followingCount;
 
-  const followersData = await followersById(id);
-
-  const followersCount = followersData.followersCount;
 
   image = image || "/ProfilePic.jpg";
   name = name || "guest";
@@ -29,8 +31,8 @@ const HomePage = async () => {
         name={name}
         username={username}
         profilePic={image}
-        following={followingCount}
-        followers={followersCount}
+        following={following}
+        followers={followers}
         location={location}
         website={webiste}
       />

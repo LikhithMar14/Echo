@@ -1,3 +1,5 @@
+"use server"
+import { auth } from "@/auth";
 import db from "@/db"
 
 
@@ -15,25 +17,25 @@ export const getUserById = async(id:string)=>{
     }
 }
 
-export const followersById = async (id: string | undefined) => {
-    try {
-      const followers = await db.follows.findMany({
-        where: {
-          followingId: id,
-        },
-        select: {
-          followerId: true, 
-        },
-      });
-  
-      const followersCount = followers.length; 
-      return { followersCount, followerIds: followers };
-    } catch (err) {
-      console.error("Error fetching followers count and IDs:", err);
-      throw err;
-    }
-  };
-  
+export const followersById = async (id: string) => {
+
+    const session = await auth();
+    if(session?.user)return null;
+
+    const followers = await db.follows.findMany({
+    
+      where:{
+        followingId:session?.user.id as string
+      },
+      select:{
+        followerId:true
+      }
+    })
+    console.log("Followers in action: ",followers)
+    return followers
+
+};
+
   export const followingById = async (id: string | undefined) => {
     try {
       const following = await db.follows.findMany({

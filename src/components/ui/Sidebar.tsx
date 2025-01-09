@@ -30,7 +30,9 @@ const Sidebar = ({
   website = "https://RehneDe-Bhai.com",
 }: SidebarProps) => {
 
-  console.log("Website:",website)
+  // console.log("Website:",website)
+  console.log("Followers :" , followers)
+  console.log("Following: ",following)
 
   return (
     <div className="hidden md:block w-full h-fit sticky top-20 pt-5 col-span-3">

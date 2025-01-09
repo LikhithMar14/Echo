@@ -13,8 +13,8 @@ const Mainbar = async({ProfilePic}:MainbarProps) => {
   const session  = await auth()
   const posts = await showPosts();
   // console.log(posts)
-  console.log(posts[0])
-  console.log("In Main bar")
+  // console.log(posts[0])
+  // console.log("In Main bar")
 
   
 
@@ -24,7 +24,7 @@ const Mainbar = async({ProfilePic}:MainbarProps) => {
       {
         posts.map((post,index)=>(
           //@ts-ignore
-          <PostComponent comments={post?.comments as  any} senderImage={post?.author?.image as string} senderName= {post?.author?.name as string} key={index} likes={post?.likes} senderPostImage={post?.image} senderUserName={post?.author?.username || session?.user.username} messageContent={post?.content} postId={post?.id} isLiked = {post?.likeStatus}/>
+          <PostComponent comments={post?.comments as  any} senderImage={post?.author?.image as string} senderName= {post?.author?.name as string} key={index} likes={post?.likes} senderPostImage={post?.image} senderUserName={post?.author?.username || session?.user.username} messageContent={post?.content} postId={post?.id} isLiked = {post?.likeStatus} senderId={post?.authorId} currentUserId={session?.user.id as string}/>
 
         ))
       }
